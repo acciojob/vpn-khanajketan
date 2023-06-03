@@ -34,20 +34,20 @@ public class ConnectionServiceImpl implements ConnectionService {
             throw new Exception("Already connected");
         }
 
-        if (countryName.equalsIgnoreCase(user.getCountry().getCountryName().toString())){
+        if (countryName.equalsIgnoreCase(user.getOriginalCountry().getCountryName().toString())){
             return user;
         }
 
-        if (user.getServiceProviders() == null){
+        if (user.getServiceProviderList() == null){
             throw new Exception("Unable to connect");
         }
 
-        List<ServiceProvider> serviceProviderList = user.getServiceProviders();
+        List<ServiceProvider> serviceProviderList = user.getServiceProviderList();
         ServiceProvider serviceProviderWithLowestId = null;
         int lowestId = Integer.MAX_VALUE;
         Country country = null;
         for (ServiceProvider serviceProvider : serviceProviderList){
-            List<Country> countryList = serviceProvider.getCountries();
+            List<Country> countryList = serviceProvider.getCountryList();
             for (Country country1 : countryList){
                 if (countryName.equalsIgnoreCase(country1.getCountryName().toString()) && lowestId>serviceProvider.getId()){
                     lowestId = serviceProvider.getId();
@@ -63,8 +63,8 @@ public class ConnectionServiceImpl implements ConnectionService {
             connection.setServiceProvider(serviceProviderWithLowestId);
             user.setMaskedIp(country.getCode() + "." + serviceProviderWithLowestId.getId() + "." + userId);
             user.setConnected(true);
-            user.getConnections().add(connection);
-            serviceProviderWithLowestId.getConnections().add(connection);
+            user.getConnectionList().add(connection);
+            serviceProviderWithLowestId.getConnectionList().add(connection);
             userRepository2.save(user);
             serviceProviderRepository2.save(serviceProviderWithLowestId);
         }
@@ -81,7 +81,7 @@ public class ConnectionServiceImpl implements ConnectionService {
         Optional<User> optionalUser = userRepository2.findById(userId);
         User user = optionalUser.get();
 
-        if (!user.isConnected()){
+        if (!user.getConnected()){
             throw new Exception("Already disconnected");
         }
 
@@ -105,7 +105,7 @@ public class ConnectionServiceImpl implements ConnectionService {
             String maskedIp = receiver.getMaskedIp();
             String code = maskedIp.substring(0,3);
             code = code.toUpperCase();
-            if (code.equals(sender.getCountry().getCode())) return sender;
+            if (code.equals(sender.getOriginalCountry().getCode())) return sender;
             String countryName = "";
             CountryName[] countryNames = CountryName.values();
             for(CountryName countryName1 : countryNames){
@@ -118,19 +118,19 @@ public class ConnectionServiceImpl implements ConnectionService {
             }catch (Exception e){
                 throw new Exception("Cannot establish communication");
             }
-            if (!sender.isConnected()){
+            if (!sender.getConnected()){
                 throw new Exception("Cannot establish communication");
             }
             return sender;
         }
-        if (sender.getCountry().equals(receiver.getCountry())){
+        if (sender.getOriginalCountry().equals(receiver.getOriginalCountry())){
             return sender;
         }
-        String countryName = receiver.getCountry().getCountryName().toString();
+        String countryName = receiver.getOriginalCountry().getCountryName().toString();
         try {
             sender = connect(senderId,countryName);
         }catch (Exception e){
-            if (!sender.isConnected()) throw new Exception("Cannot establish communication");
+            if (!sender.getConnected()) throw new Exception("Cannot establish communication");
         }
         return sender;
 

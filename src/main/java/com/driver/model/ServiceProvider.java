@@ -6,27 +6,39 @@ import java.util.List;
 
 @Entity
 public class ServiceProvider {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    int id;
+    private int id;
 
-    @Column(name = "name")
-    String name;
+    private String name;
 
     @ManyToOne
-    @JoinColumn(name = "admin_id")
-    Admin admin;
+    @JoinColumn
+    private Admin admin;
 
+    @OneToMany(mappedBy = "serviceProvider",cascade = CascadeType.ALL)
+    List<Connection> connectionList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "serviceProvider",cascade = CascadeType.ALL)
+    List<Country> countryList = new ArrayList<>();
+
+    //service provider as parent in manytomany
     @ManyToMany
     @JoinColumn
     List<User> users = new ArrayList<>();
 
-    @OneToMany(mappedBy = "serviceProvider",cascade = CascadeType.ALL)
-    List<Connection> connections = new ArrayList<>();
+    public ServiceProvider() {
+    }
 
-    @OneToMany(mappedBy = "serviceProvider",cascade = CascadeType.ALL)
-    List<Country> countries = new ArrayList<>();
+    public ServiceProvider(int id, String name, Admin admin, List<Connection> connectionList, List<Country> countryList, List<User> users) {
+        this.id = id;
+        this.name = name;
+        this.admin = admin;
+        this.connectionList = connectionList;
+        this.countryList = countryList;
+        this.users = users;
+    }
 
     public int getId() {
         return id;
@@ -52,38 +64,27 @@ public class ServiceProvider {
         this.admin = admin;
     }
 
+    public List<Connection> getConnectionList() {
+        return connectionList;
+    }
+
+    public void setConnectionList(List<Connection> connectionList) {
+        this.connectionList = connectionList;
+    }
+
+    public List<Country> getCountryList() {
+        return countryList;
+    }
+
+    public void setCountryList(List<Country> countryList) {
+        this.countryList = countryList;
+    }
+
     public List<User> getUsers() {
         return users;
     }
 
     public void setUsers(List<User> users) {
         this.users = users;
-    }
-
-    public List<Connection> getConnections() {
-        return connections;
-    }
-
-    public void setConnections(List<Connection> connections) {
-        this.connections = connections;
-    }
-
-    public List<Country> getCountries() {
-        return countries;
-    }
-
-    public void setCountries(List<Country> countries) {
-        this.countries = countries;
-    }
-
-    public ServiceProvider(String name, Admin admin, List<User> users, List<Connection> connections, List<Country> countries) {
-        this.name = name;
-        this.admin = admin;
-        this.users = users;
-        this.connections = connections;
-        this.countries = countries;
-    }
-
-    public ServiceProvider() {
     }
 }

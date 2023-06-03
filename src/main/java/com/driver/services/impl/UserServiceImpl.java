@@ -36,18 +36,18 @@ public class UserServiceImpl implements UserService {
 
         //Create user and set values
         User user = new User();
-        user.setUserName(username);
+        user.setUsername(username);
         user.setPassword(password);
         user.setConnected(false);
 
 
         //add user to country
         country.setUser(user);
-        user.setCountry(country);
+        user.setOriginalCountry(country);
         //save user to get user obejct and by that userId
         user = userRepository3.save(user);
         //save the originalIp in given format
-        user.setOriginalIp(new String(user.getCountry().getCode() + "." + user.getId()));
+        user.setOriginalIp(new String(user.getOriginalCountry().getCode() + "." + user.getId()));
         //save user
         user = userRepository3.save(user);
         return user;
@@ -59,7 +59,7 @@ public class UserServiceImpl implements UserService {
         ServiceProvider serviceProvider = serviceProviderRepository3.findById(serviceProviderId).get();
         User user = userRepository3.findById(userId).get();
 
-        user.getServiceProviders().add(serviceProvider);
+        user.getServiceProviderList().add(serviceProvider);
         serviceProvider.getUsers().add(user);
 
         serviceProviderRepository3.save(serviceProvider);

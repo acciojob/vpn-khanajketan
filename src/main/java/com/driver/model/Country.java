@@ -1,33 +1,31 @@
 package com.driver.model;// Note: Do not write @Enumerated annotation above CountryName in this model.
 
+
+import com.driver.model.CountryName;
+import com.driver.model.ServiceProvider;
+import com.driver.model.User;
+
 import javax.persistence.*;
 
 @Entity
-public class Country{
+public class Country {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    int id;
-    @Column(name = "name")
-    CountryName countryName;
+    private int id;
 
-    @Column(name = "code")
-    String code;
+    private CountryName countryName;
 
+    private String code;
 
+    @ManyToOne
+    @JoinColumn
+    private ServiceProvider serviceProvider;
+
+    //user as parent in oneonone
     @OneToOne
     @JoinColumn
-    User user;
-    @ManyToOne
-    @JoinColumn(name = "service_provider_id")
-    ServiceProvider serviceProvider;
-
-    public Country(CountryName countryName, String code, User user, ServiceProvider serviceProvider) {
-        this.countryName = countryName;
-        this.code = code;
-        this.user = user;
-        this.serviceProvider = serviceProvider;
-    }
+    private User user;
 
     public Country() {
     }
@@ -35,6 +33,14 @@ public class Country{
     public Country(CountryName countryName, String code) {
         this.countryName = countryName;
         this.code = code;
+    }
+
+    public Country(int id, CountryName countryName, String code, ServiceProvider serviceProvider, User user) {
+        this.id = id;
+        this.countryName = countryName;
+        this.code = code;
+        this.serviceProvider = serviceProvider;
+        this.user = user;
     }
 
     public int getId() {
@@ -61,19 +67,19 @@ public class Country{
         this.code = code;
     }
 
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
     public ServiceProvider getServiceProvider() {
         return serviceProvider;
     }
 
     public void setServiceProvider(ServiceProvider serviceProvider) {
         this.serviceProvider = serviceProvider;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }
