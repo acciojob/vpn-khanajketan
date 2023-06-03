@@ -11,8 +11,6 @@ import com.driver.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.print.DocFlavor;
-
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -25,8 +23,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User register(String username, String password, String countryName) throws Exception{
-        //create a user of given country. The originalIp of the user should be "countryCode.userId" and return the user. Note that right now user is not connected and thus connected would be false and maskedIp would be null
+
+        //create a user of given country. The originalIp of the user should be "countryCode.userId" and return the user.
+        // Note that right now user is not connected and thus connected would be false and maskedIp would be null
         //Note that the userId is created automatically by the repository layer
+
         //convert to uppercase to ignore uppercase or lower case
         String countryName1 = countryName.toUpperCase();
         //Throw exception
@@ -55,6 +56,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User subscribe(Integer userId, Integer serviceProviderId) {
+
         //subscribe to the serviceProvider by adding it to the list of providers and return updated User
         ServiceProvider serviceProvider = serviceProviderRepository3.findById(serviceProviderId).get();
         User user = userRepository3.findById(userId).get();
@@ -64,5 +66,6 @@ public class UserServiceImpl implements UserService {
 
         serviceProviderRepository3.save(serviceProvider);
         return user;
+
     }
 }
