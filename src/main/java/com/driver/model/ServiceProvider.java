@@ -15,11 +15,11 @@ public class ServiceProvider {
     String name;
 
     @ManyToOne
-    @JoinColumn
-    @Column(name = "admin_id")
+    @JoinColumn(name = "admin_id")
     Admin admin;
 
-    @OneToMany(mappedBy = "serviceProvider",cascade = CascadeType.ALL)
+    @ManyToMany
+    @JoinColumn
     List<User> users = new ArrayList<>();
 
     @OneToMany(mappedBy = "serviceProvider",cascade = CascadeType.ALL)

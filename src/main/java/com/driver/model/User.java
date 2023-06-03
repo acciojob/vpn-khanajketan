@@ -26,7 +26,8 @@ public class User {
     @Column(name = "connected")
     boolean connected;
 
-    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
+    @ManyToMany
+    @JoinColumn
     List<ServiceProvider> serviceProviders =new ArrayList<>();
 
     @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
@@ -40,8 +41,7 @@ public class User {
         this.connections = connections;
     }
 
-    @ManyToOne
-    @JoinColumn(name = "country_id")
+    @OneToOne(mappedBy = "user",cascade = CascadeType.ALL)
     Country country;
 
     public User(String userName, String password, String originalIp, String maskedIp, boolean connected, List<ServiceProvider> serviceProviders, Country country) {

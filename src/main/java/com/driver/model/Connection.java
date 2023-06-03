@@ -11,13 +11,11 @@ public class Connection {
     int id;
 
     @ManyToOne
-    @JoinColumn
-    @Column(name = "user_id")
+    @JoinColumn(name = "user_id")
     User user;
 
     @ManyToOne
-    @JoinColumn
-    @Column(name = "service_provider_id")
+    @JoinColumn(name = "service_provider_id")
     ServiceProvider serviceProvider;
 
     public Connection(int id, User user, ServiceProvider serviceProvider) {

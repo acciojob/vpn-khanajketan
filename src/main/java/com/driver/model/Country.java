@@ -14,11 +14,12 @@ public class Country{
     @Column(name = "code")
     String code;
 
-    @Column(name = "user")
+
+    @OneToOne
+    @JoinColumn
     User user;
     @ManyToOne
-    @JoinColumn
-    @Column(name = "service_provider_id")
+    @JoinColumn(name = "service_provider_id")
     ServiceProvider serviceProvider;
 
     public Country(CountryName countryName, String code, User user, ServiceProvider serviceProvider) {
